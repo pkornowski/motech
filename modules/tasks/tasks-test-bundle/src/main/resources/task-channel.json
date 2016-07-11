@@ -22,6 +22,38 @@
                 "displayName": "Foo"
             }
         ]
+    },
+    {
+      "displayName": "Test Action return Post Action Params",
+      "serviceInterface": "TasksTestService",
+      "serviceMethod": "shouldExecuteTaskAndUsePostActionParameters",
+      "actionParameters": [
+        {
+          "key": "testName",
+          "displayName": "testName"
+        }
+      ],
+      "postActionParameters": [
+        {
+          "key": "testNameWithPrefix",
+          "displayName": "testNameWithPrefix"
+        }
+      ]
+    },
+    {
+      "displayName": "Test Action With Post Action Params",
+      "serviceInterface": "TasksTestService",
+      "serviceMethod": "shouldExecuteTaskActionWithPostActionParameter",
+      "actionParameters": [
+        {
+          "key": "testName",
+          "displayName": "testName"
+        },
+        {
+          "key": "testNameWithPrefix",
+          "displayName": "testNameWithPrefix"
+        }
+      ]
     }
   ]
 }
