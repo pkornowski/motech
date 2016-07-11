@@ -25,8 +25,8 @@
     },
     {
       "displayName": "Test Action return Post Action Params",
-      "serviceInterface": "TasksTestService",
-      "serviceMethod": "shouldExecuteTaskAndUsePostActionParameters",
+      "serviceInterface": "org.motechproject.testmodule.service.TasksTestService",
+      "serviceMethod": "createTestObjectWithPostActionParameter",
       "actionParameters": [
         {
           "key": "testName",
@@ -42,8 +42,8 @@
     },
     {
       "displayName": "Test Action With Post Action Params",
-      "serviceInterface": "TasksTestService",
-      "serviceMethod": "shouldExecuteTaskActionWithPostActionParameter",
+      "serviceInterface": "org.motechproject.testmodule.service.TasksTestService",
+      "serviceMethod": "createTestObject",
       "actionParameters": [
         {
           "key": "testName",
