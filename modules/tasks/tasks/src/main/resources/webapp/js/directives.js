@@ -87,7 +87,7 @@
                        name: 'id',
                        index: 'id',
                        sortable: false,
-                       hidden: true
+                       hidden: false
                     }],
                     pager: '#' + attrs.taskHistoryGrid,
                     viewrecords: true,
@@ -162,6 +162,7 @@
                         $compile($('.grid-ng-clickable'))(scope);
                     },
                     postData: {
+                        groupingColumn: scope.groupingColumn,
                         activityType: scope.selectedActivityType.join(',').replace(' ', '_').toUpperCase()
                     },
                     sortcolumn: 'task',

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -177,12 +178,12 @@ public class ActivityController {
         QueryParams result;
 
         if (StringUtils.isEmpty(settings.getSidx())) {
-            result = new QueryParams(settings.getPage(), settings.getRows(), new Order("date", Order.Direction.DESC));
+            result = new QueryParams(settings.getPage(), settings.getRows(), new Order("date", Order.Direction.DESC), settings.getGroupingColumn());
         } else {
             if ("asc".equals(settings.getSord())) {
-                result = new QueryParams(settings.getPage(), settings.getRows(), new Order(settings.getSidx(), Order.Direction.ASC));
+                result = new QueryParams(settings.getPage(), settings.getRows(), new Order(settings.getSidx(), Order.Direction.ASC), settings.getGroupingColumn());
             } else {
-                result = new QueryParams(settings.getPage(), settings.getRows(), new Order(settings.getSidx(), Order.Direction.DESC));
+                result = new QueryParams(settings.getPage(), settings.getRows(), new Order(settings.getSidx(), Order.Direction.DESC), settings.getGroupingColumn());
             }
         }
 

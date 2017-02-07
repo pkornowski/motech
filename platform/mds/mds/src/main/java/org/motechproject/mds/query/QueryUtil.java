@@ -27,11 +27,23 @@ public final class QueryUtil {
     }
 
     public static void setQueryParams(Query query, QueryParams queryParams) {
+        String order;
+
         if (query == null) {
             throw new IllegalArgumentException("Cannot set parameters for a null query");
         }
 
         if (queryParams != null) {
+            if (queryParams.isOrderSet()) {
+                order = StringUtils.join(queryParams.getOrderList(), ", ");
+                query.setOrdering(order);
+            } else {
+                if (queryParams.isGroupingSet()) {
+                    query.setGrouping(queryParams.getGroupingColumn());
+                }
+            }
+
+
             if (queryParams.isPagingSet()) {
                 long page = queryParams.getPage();
                 long pageSize = queryParams.getPageSize();
@@ -41,10 +53,6 @@ public final class QueryUtil {
                 long toExcl = page * pageSize;
 
                 query.setRange(fromIncl, toExcl);
-            }
-            if (queryParams.isOrderSet()) {
-                String order = StringUtils.join(queryParams.getOrderList(), ", ");
-                query.setOrdering(order);
             }
         }
     }

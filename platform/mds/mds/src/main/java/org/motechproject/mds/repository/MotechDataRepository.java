@@ -1,11 +1,13 @@
 package org.motechproject.mds.repository;
 
+import org.datanucleus.query.QueryUtils;
 import org.motechproject.mds.filter.Filters;
 import org.motechproject.mds.query.Property;
 import org.motechproject.mds.query.QueryExecutor;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.query.QueryUtil;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
+import org.motechproject.mds.util.Order;
 import org.motechproject.mds.util.PropertyUtil;
 import org.springframework.stereotype.Repository;
 
@@ -143,8 +145,15 @@ public abstract class MotechDataRepository<T> extends AbstractRepository {
     }
 
     public List<T> retrieveAll(List<Property> properties, QueryParams queryParams, InstanceSecurityRestriction restriction) {
-        Query query = createQuery(properties, restriction);
-        QueryUtil.setQueryParams(query, queryParams);
+        Query query;
+
+        if (queryParams.isGroupingSet()) {
+            query = retrieveAllWithGrouping(properties, queryParams, restriction);
+        } else {
+            query = createQuery(properties, restriction);
+            QueryUtil.setQueryParams(query, queryParams);
+        }
+
 
         Collection collection = (Collection) QueryExecutor.executeWithArray(query, properties);
 
@@ -265,6 +274,33 @@ public abstract class MotechDataRepository<T> extends AbstractRepository {
         Query query = createQuery(new String[0], new Object[0], restriction);
         QueryUtil.setQueryParams(query, queryParams);
         QueryUtil.useFilters(query, filters);
+
+        return query;
+    }
+
+    private Query retrieveAllWithGrouping(List<Property> properties, QueryParams queryParams, InstanceSecurityRestriction restriction) {
+     Query query = createQuery(properties, restriction);
+    //Query query;
+
+        /*
+        select * from (
+				select * from (
+								select * from MOTECH_TASKS_TASKACTIVITY order by date desc //sort by date desc <-- constant
+				) as x group by task // <-- group by task column if checked
+        ) as xx order by id desc    // <-- sort by selected column on the ui
+        */
+
+        Query subQuery = query;
+        Order order = new Order("date", "desc");
+        QueryParams subQueryParams = new QueryParams(order);
+        QueryUtil.setQueryParams(subQuery, subQueryParams);
+
+        query = getPersistenceManager().newQuery("SELECT FROM orderedObject");
+        // query.addSubquery(subQuery, "orderedObject instanceof " + this.getClassType().getName(), null);
+        query.addSubquery(subQuery, "orderedObject", null);
+
+        QueryParams firstQueryParams = new QueryParams(queryParams.getPage(), queryParams.getPageSize(), (List<Order>) null, queryParams.getGroupingColumn());
+        QueryUtil.setQueryParams(query, firstQueryParams);
 
         return query;
     }
